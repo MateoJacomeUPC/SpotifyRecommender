@@ -1,0 +1,8 @@
+________ 07/07/22 ________
+- Created project and repo
+- Registered in Spotify for Developers
+- Created a Spotify app to get access to the API (Recoco)
+- Started testing
+
+________ 08/07/22 ________
+-
