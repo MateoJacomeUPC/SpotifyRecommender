@@ -5,4 +5,5 @@ ________ 07/07/22 ________
 - Started testing
 
 ________ 08/07/22 ________
--
+- Extracted main features for liked tracks
+- Put them into a pandas df. Not fulfilling 1NF right now because genres are all in a list.
