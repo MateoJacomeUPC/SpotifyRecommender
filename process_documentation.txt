@@ -7,3 +7,7 @@ ________ 07/07/22 ________
 ________ 08/07/22 ________
 - Extracted main features for liked tracks
 - Put them into a pandas df. Not fulfilling 1NF right now because genres are all in a list.
+
+________ 14/07/22 ________
+- Added "Playlist Clustering.py", with a basic Kmeans to cluster songs into playlists,
+- visualize the songs in a PCA and create playlists in the user account with radar charts as cover images.
