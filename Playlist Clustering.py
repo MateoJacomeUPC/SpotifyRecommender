@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 import spotipy
 from sklearn import decomposition
+
 
 np.random.seed(42)
 
@@ -51,7 +53,6 @@ summary_stats["cluster"] = summary_stats.index
 print(summary_stats.to_string())
 
 #radar chart
-import numpy as np
 def make_spider(row, title, color):
     # number of variable
     categories = [word[3:].capitalize() for word in features]
