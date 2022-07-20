@@ -4,20 +4,21 @@ import numpy as np
 import spotipy
 from sklearn import decomposition
 
-
 np.random.seed(42)
+
+#select number of clusters
+n_clust = 5
 
 # import the songs, project only some of the features.
 songs_ori = pd.read_pickle("liked_songs_2022-07-08.pkl")
-features = ["af_danceability", "af_energy","af_loudness","af_speechiness",
-            "af_acousticness","af_mode","af_instrumentalness","af_liveness","af_valence"]
+features = ["af_danceability", "af_energy","af_acousticness","af_instrumentalness","af_valence"]
 songs = songs_ori.loc[:,features]
 
 
-# normalize loudness
-songs["af_loudness"] = -songs["af_loudness"]
-songs["af_loudness"] = [round((i - min(songs["af_loudness"])) / (max(songs["af_loudness"])
-                            - min(songs["af_loudness"])), 3) for i in songs["af_loudness"]]
+# # normalize loudness
+# songs["af_loudness"] = -songs["af_loudness"]
+# songs["af_loudness"] = [round((i - min(songs["af_loudness"])) / (max(songs["af_loudness"])
+#                             - min(songs["af_loudness"])), 3) for i in songs["af_loudness"]]
 
 
 #do a PCA
@@ -32,7 +33,7 @@ print(pca.components_)
 
 #cluster the songs
 from sklearn.cluster import KMeans
-kmeans_model = KMeans(n_clusters=8, random_state=1).fit(songs)
+kmeans_model = KMeans(n_clusters=n_clust, random_state=1).fit(songs)
 labels = kmeans_model.labels_
 
 #plot the songs with their labels in a PCA
@@ -70,7 +71,7 @@ def make_spider(row, title, color):
     ax.set_theta_direction(-1)
 
     # Draw one axe per variable + add labels labels yet
-    plt.xticks(angles[:-1], categories, color='grey', size=8)
+    plt.xticks(angles[:-1], categories, color='grey', size=N)
 
     # Draw ylabels
     ax.set_rlabel_position(0)
@@ -102,7 +103,7 @@ import base64
 buffer_dict = {}
 for row in range(0, len(summary_stats.index)):
     plt.figure(figsize=(400 / my_dpi, 400 / my_dpi), dpi=my_dpi)
-    make_spider(row=row, title='Clusterlist.V0 - ' + str(row), color=my_palette(row))
+    make_spider(row=row, title='Clusterlist.V2 - ' + str(row), color=my_palette(row))
 
     buffer_dict[row] = io.BytesIO()
     plt.savefig(buffer_dict[row])
@@ -115,8 +116,8 @@ spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 user = spotify.current_user()["id"]
 
 #create new playlists
-for cluster in range(0,8):
-    spotify.user_playlist_create(user, name = "Clusterlist.V0 - {}".format(cluster),
+for cluster in range(0,n_clust):
+    spotify.user_playlist_create(user, name = "Clusterlist.V2 - {}".format(cluster),
                                  description = "A playlist created through Kmeans clustering")
 
 #get all playlists
@@ -127,11 +128,11 @@ while playlist_results['next']:
     playlists.extend(playlist_results['items'])
 
 #get the newly created playlists
-new_playlist_ids = [pl["id"] for pl in playlists if pl["name"][0:14] == "Clusterlist.V0"]
+new_playlist_ids = [pl["id"] for pl in playlists if pl["name"][0:14] == "Clusterlist.V2"]
 
 
 #convert the clusters to playlists
-for cluster, playlist_id in zip(range(0,8), new_playlist_ids):
+for cluster, playlist_id in zip(range(0,len(features)), new_playlist_ids):
     songs_to_add = songs_ori.loc[songs_ori["cluster"] == cluster].index
     i = 0
     length = len(songs_to_add)
